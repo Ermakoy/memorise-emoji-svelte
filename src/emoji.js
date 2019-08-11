@@ -1,5 +1,4 @@
 import randomEmoji from 'random-emoji';
-import { writable } from 'svelte/store'
 
 const shuffleArray = arr =>
   arr
@@ -16,8 +15,4 @@ function getInitialEmoji(count = 8) {
 
 const emojis = getInitialEmoji();
 
-export { 
-    emojis,
-    // opened,
-    // guessed,
-}
+export { emojis }

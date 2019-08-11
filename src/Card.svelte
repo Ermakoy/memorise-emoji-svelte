@@ -1,8 +1,11 @@
 <script>
+    export let isFlipped;
+    export let emoji
 </script>
-<div class:is-flipped={$$props.isFlipped} on:click class="card">
-    {#if $$props.isFlipped}
-        {$$props.emoji}
+
+<div class:is-flipped={isFlipped} on:click class="card">
+    {#if isFlipped}
+        {emoji}
     {/if}
 </div>
 
@@ -17,6 +20,8 @@
         justify-content: center;
 
         background-color: hotpink;
+
+        font-size: 6em;
     }
     .is-flipped {
         background-color: transparent;

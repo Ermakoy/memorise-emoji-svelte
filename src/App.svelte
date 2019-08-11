@@ -1,29 +1,35 @@
 <script>
+  import { writable } from "svelte/store";
+
   import Card from "./Card.svelte";
-  import {writable} from 'svelte/store';
   import { emojis } from "./emoji";
 
   const opened = writable([]);
   const guessed = writable([]);
+
   opened.subscribe(cardIndexes => {
-	if (cardIndexes.length === 2) {
+    if (cardIndexes.length === 2) {
       const [first, second] = cardIndexes;
-      if (first === second) {
-		guessed.update(prev => prev.concat(cardIndexes));
-		setTimeout(() => {
-		  alert("success");
-		},1000)
+      if (emojis[first] === emojis[second]) {
+        guessed.update(prev => prev.concat(cardIndexes));
+        setTimeout(() => {
+          alert("success");
+        }, 700);
         opened.set([]);
       } else {
-        
-
         setTimeout(() => {
-		  alert("Not correct");
+          alert("Not correct");
           opened.set([]);
-        }, 2000);
+        }, 700);
       }
-	}
-  })
+    }
+  });
+
+  const flipCard = i => () =>
+    $opened.length < 2 &&
+    !$opened.includes(i) &&
+    !$guessed.includes(i) &&
+    opened.update(prev => prev.concat(i));
 </script>
 
 <style>
@@ -43,8 +49,7 @@
   {#each emojis as emoji, i}
     <Card
       isFlipped={$opened.includes(i) || $guessed.includes(i)}
-      on:click={() => opened.update(prev => prev.concat(i))}
-      emoji={emoji} 
-	  />
+      on:click={flipCard(i)}
+      {emoji} />
   {/each}
 </div>
