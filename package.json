@@ -11,6 +11,7 @@
     "rollup-plugin-terser": "^4.0.4",
     "svelte": "^3.0.0"
   },
+  "homepage": "https://ermakoy.github.io/memorise-emoji-svelte",
   "dependencies": {
     "random-emoji": "^1.0.2",
     "sirv-cli": "^0.4.4"
