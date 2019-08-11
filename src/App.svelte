@@ -1,37 +1,50 @@
-<script context="module">
-	const randomEmoji = require('random-emoji');
-
-	const shuffleArray = arr =>
-	arr
-		.map(a => [Math.random(), a])
-		.sort((a, b) => a[0] - b[0])
-		.map(a => a[1]);
-
-	function getInitialEmoji(count = 8) {
-		const emojiArray = randomEmoji.random({ count });
-		return shuffleArray([...emojiArray, ...emojiArray]);
-	}
-
-	const chunk = (input, size) => input.reduce(
-		(arr, item, idx) =>
-		idx % size === 0
-			? [...arr, [item]]
-			: [...arr.slice(0, -1), [...arr.slice(-1)[0], item]],
-		[]
-	);
-
-	let cards = getInitialEmoji()
-</script>
 <script>
-	import Card from './Card'
-	export let name;
-	function flipCard(){
+  import Card from "./Card.svelte";
+  import {writable} from 'svelte/store';
+  import { emojis } from "./emoji";
 
+  const opened = writable([]);
+  const guessed = writable([]);
+  opened.subscribe(cardIndexes => {
+	if (cardIndexes.length === 2) {
+      const [first, second] = cardIndexes;
+      if (first === second) {
+		guessed.update(prev => prev.concat(cardIndexes));
+		setTimeout(() => {
+		  alert("success");
+		},1000)
+        opened.set([]);
+      } else {
+        
+
+        setTimeout(() => {
+		  alert("Not correct");
+          opened.set([]);
+        }, 2000);
+      }
 	}
+  })
 </script>
 
-<div>
-	{#each cards as card}
-		<Card isFlipped={card.isFlipped} on:click={flipCard} emoji={card.emoji}/>
-	{/each}
+<style>
+  .container {
+    width: 100vw;
+    height: 100vh;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+
+    grid-gap: 30px;
+  }
+</style>
+
+<div class="container">
+  {#each emojis as emoji, i}
+    <Card
+      isFlipped={$opened.includes(i) || $guessed.includes(i)}
+      on:click={() => opened.update(prev => prev.concat(i))}
+      emoji={emoji} 
+	  />
+  {/each}
 </div>
